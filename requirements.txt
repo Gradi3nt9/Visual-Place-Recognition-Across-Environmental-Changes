@@ -1,0 +1,12 @@
+# Python 3.10. Pinned to versions verified on the dev machine.
+# For a CUDA machine, install torch/torchvision from https://pytorch.org first (same versions), then this file.
+numpy==1.26.0
+opencv-contrib-python==4.9.0.80
+torch==2.1.0
+torchvision==0.16.0
+Pillow>=10.0
+PyYAML==6.0.1
+tqdm>=4.66
+# Needed only so torch.hub can import the official SALAD code (pinned to SALAD's environment.yml).
+pytorch-lightning==2.1.2
+pytest>=8.0

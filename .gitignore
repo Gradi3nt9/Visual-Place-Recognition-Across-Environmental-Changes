@@ -218,3 +218,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- VPR project ---
+# Datasets, caches, and bulky outputs stay local. Split manifests (splits/) ARE committed.
+data/
+cache/
+results/rankings/
+results/per_query/
+*.npy
+*.npz
+*.ckpt
+*.pth

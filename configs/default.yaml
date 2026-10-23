@@ -1,0 +1,36 @@
+# Default experiment configuration. Override any value from the CLI with --set key=value,
+# e.g. --set methods.sift_ransac.ratio_test=0.8
+#
+# Paths are relative to the repo root unless absolute.
+# data_root can also be overridden with the VPR_DATA_ROOT environment variable.
+
+data_root: data/nordland      # folder containing the VPR-Bench Nordland ref/ and query/ dirs
+cache_dir: cache              # extracted features / descriptors (gitignored)
+results_dir: results          # rankings, tables, figures
+
+top_k: 100                    # how many ranked candidates each method saves per query
+recall_ks: [1, 5, 10]
+seed: 0
+
+methods:
+  random: {}                  # sanity-check baseline; expected R@1 ~= |gt| / |database|
+
+  sift_ransac:                # Person 2. Values per handoff sections 8-9.
+    knn_k: 2
+    ratio_test: 0.75          # Lowe ratio
+    geometric_model: fundamental
+    ransac_reproj_threshold: 3.0   # OpenCV findFundamentalMat default
+    ransac_confidence: 0.99        # OpenCV findFundamentalMat default
+    min_matches: 8            # fundamental matrix needs >= 8 correspondences
+    score: inlier_count       # later: inlier_ratio, normalized count, ...
+    max_image_side: null      # optional downscale before SIFT (null = original size)
+
+  salad:                      # Person 3. Values per official repo (serizba/salad) eval settings.
+    hub_repo: serizba/salad
+    hub_entry: dinov2_salad   # pretrained DINOv2 ViT-B/14 + SALAD, 8192+256 dims
+    image_size: [322, 322]    # README eval command uses --image_size 322 322
+    normalize_mean: [0.485, 0.456, 0.406]
+    normalize_std: [0.229, 0.224, 0.225]
+    batch_size: 8
+    device: auto              # auto | cpu | cuda
+    similarity: cosine        # descriptors are L2-normalized, so this ranks identically to SALAD's faiss L2
