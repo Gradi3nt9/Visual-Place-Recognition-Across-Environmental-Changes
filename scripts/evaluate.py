@@ -17,6 +17,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.datasets.base import load_split  # noqa: E402
+from src.evaluation.compare import check_comparable  # noqa: E402
 from src.evaluation.recall import evaluate_recall  # noqa: E402
 from src.evaluation.runtime import summarize_runtime  # noqa: E402
 from src.utils.config import load_config, resolve  # noqa: E402
@@ -52,9 +53,18 @@ def main() -> None:
         for stage, s in rt.items():
             row[f"{stage}_ms"] = round(1000 * s["mean"], 1)
         row["index_s"] = round(meta.get("index_seconds", 0.0), 1)
+        idx_stats = meta.get("index_stats") or {}
+        if "cached" in idx_stats:
+            row["index_cached"] = idx_stats["cached"]
+        row["machine"] = f"{meta.get('host', '?')} ({meta.get('cuda') or 'CPU'})"
         row["git_commit"] = (meta.get("git_commit") or "")[:8] + ("*" if meta.get("git_dirty") else "")
         rows.append(row)
 
+    # Fails on different splits / query counts; warns on different machines.
+    try:
+        warnings = check_comparable(rows)
+    except ValueError as e:
+        sys.exit(f"refusing to build a comparison table: {e}")
     cols = list(dict.fromkeys(c for r in rows for c in r))
     lines = ["| " + " | ".join(cols) + " |", "|" + "---|" * len(cols)]
     lines += ["| " + " | ".join(str(r.get(c, "")) for c in cols) + " |" for r in rows]
@@ -62,6 +72,8 @@ def main() -> None:
     print(table)
     print("\nR@K in %. *_ms = mean wall-clock per query (extract/search/verify, see docs/DECISIONS.md). "
           "index_s = one-off database preparation (may include cache hits). '*' after commit = uncommitted changes.")
+    for w in warnings:
+        print(f"WARNING: {w}")
 
     out_name = args.out or (Path(args.rankings[0]).stem if len(rows) == 1 else "comparison")
     tables = results_dir / "tables"
