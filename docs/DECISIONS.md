@@ -72,10 +72,18 @@ decision, so the midterm report can cite actual choices instead of the proposal'
 - Early observation (10 queries × 40 refs; 10 correct, 390 wrong pairs): median RANSAC inliers
   30 for correct vs 10 for wrong pairs. SIFT does separate them across seasons, but not by much.
 
+### 8. SALAD similarity/search — validated October 27, 2026 (item F)
+- Real-model runs on smoke, dev1, and full Nordland passed descriptor validation:
+  finite, 8448-dimensional, L2-normalized within absolute tolerance 1e-3.
+- Use dot-product cosine similarity, ranked highest first. For unit descriptors,
+  squared L2 distance equals `2 - 2 * cosine`, so both produce the same ordering.
+- Reference-cache reuse was verified on all 100 smoke references with unchanged recall.
+  Query features remain uncached.
+- Measurements and provenance limitations are recorded in `docs/SALAD.md`.
+
 ## Open (needs a decision, owner in brackets)
 
 | # | Question | Owner | Notes |
 |---|---|---|---|
 | D | Compute for SALAD | team | Decided: Google Colab GPU. Person 1 shares the images on Drive. |
 | E | SIFT image size | Person 2 | `max_image_side` (null = native). Check Nordland's native resolution first. |
-| F | Final SALAD similarity/search | Person 3 | Cosine on L2-normalized descriptors (equivalent to SALAD's faiss L2). Confirm descriptors are normalized in practice. |

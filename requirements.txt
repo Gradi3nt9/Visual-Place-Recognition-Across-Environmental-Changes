@@ -11,3 +11,4 @@ matplotlib>=3.8  # qualitative retrieval figures (scripts/visualize_retrievals.p
 # Needed only so torch.hub can import the official SALAD code (pinned to SALAD's environment.yml).
 pytorch-lightning==2.1.2
 pytest>=8.0
+pytorch-metric-learning

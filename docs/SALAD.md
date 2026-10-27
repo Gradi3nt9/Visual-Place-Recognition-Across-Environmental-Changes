@@ -44,12 +44,49 @@ substitute for a real-image/model smoke run.
 
 ## Before reporting results
 
-Confirm descriptor checks pass with the actual model; keep decision F open until then.
-Coordinate a shared development split with Persons 1 and 4, verify seasons with images,
-and record hardware when comparing against SIFT. Smoke scores are correctness checks only.
+Real-model descriptor checks passed; see decision 8 in `DECISIONS.md`.
+Use the shared `nordland_dev1` split for midterm results and record hardware when
+comparing against SIFT. Smoke scores are correctness checks only.
 Pin `methods.salad.hub_repo` to a reviewed upstream tag/commit using torch.hub's
 `owner/repo:revision` syntax before final experiments; the scaffold default tracks upstream.
 
 Official sources: [hub entry point](https://github.com/serizba/salad/blob/main/hubconf.py),
 [preprocessing/evaluation](https://github.com/serizba/salad/blob/main/eval.py),
 [descriptor normalization](https://github.com/serizba/salad/blob/main/models/aggregators/salad.py).
+
+
+## Real-data validation — October 27, 2026
+
+Used official pretrained DINOv2 + SALAD with 322×322 inputs and float32 inference
+on a Google Colab Tesla T4. Cosine similarity search ran on CPU. Query descriptors
+were never cached. The following measurements were reported from Colab:
+
+| Split | Queries | References | R@1 (%) | R@5 (%) | R@10 (%) | Runtime/query (ms) | Indexing (s) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| nordland_smoke | 100 | 100 | 90.00 | 100.00 | 100.00 | 47.6 | 22.6 |
+| nordland_dev1 | 276 | 2,753 | 86.23 | 97.10 | 98.55 | 56.1 | 113.3 |
+| nordland_full | 2,760 | 27,592 | 78.22 | 90.62 | 93.33 | 133.6 | 1179.6 |
+
+Runtime/query includes query extraction and search; database indexing is reported
+separately. These initial runs had zero reference-cache hits. Smoke results are
+correctness checks, not midterm experimental results. Published Nordland numbers
+must be compared against the full protocol with matching evaluation settings;
+that comparison is still pending.
+
+A repeated smoke run loaded all 100 references from cache and retained the same
+recall (90% R@1, 100% R@5/R@10). Query descriptors were still computed afresh.
+The repeated run measured 57.3 ms/query and 9.4 s for offline preparation, which
+includes model loading and cache reading.
+
+All real descriptors passed the finite-value, 8448-dimension, and L2 unit-norm
+checks (absolute tolerance 1e-3).
+
+Code commit: `36e0480b`. Runs were marked dirty; `git status` showed untracked
+`results/`. Upstream SALAD and DINOv2 code used unpinned main revisions; exact
+upstream commits were not recorded. Runtime output identified Python 3.13 in
+Colab, so this was not the repository's pinned Python 3.10 environment.
+
+Setup also required `pytorch-metric-learning`, installed separately in Colab.
+Exact installed package versions were not captured in the supplied evaluation
+tables. Save rankings, tables, and per-query outputs from Colab to the shared
+Drive before ending the session; these artifacts are not included here.
