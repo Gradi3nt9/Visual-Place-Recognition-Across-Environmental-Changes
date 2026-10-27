@@ -45,13 +45,37 @@ decision, so the midterm report can cite actual choices instead of the proposal'
 - Purpose: correctness checks only. It is easier and smaller than the real protocol, so don't report it as a result.
 - Random baseline on it: R@1 = 1%, as expected (1/100).
 
+### 6. Image source and seasons (resolved items A and C, 2026-10-26)
+- The VPR-Bench surfdrive download is offline. Images come from the
+  [VPR-datasets-downloader](https://github.com/gmberton/VPR-datasets-downloader) mirror
+  (Patch-NetVLAD Nordland test split: 27,592 database + 27,592 query frames, aligned frame-for-frame).
+- Mapping to VPR-Bench: `ref/j` = mirror database frame *j*; `query/i` = mirror query frame *10i*
+  (`scripts/import_nordland_mirror.py`). Supported by the counts (27,592 and 2,760 = every 10th) and
+  by `results/figures/nordland_seasons.png`: each query shows the same place as its ground-truth reference.
+  Still to confirm: SALAD on `nordland_full` should land near the paper's Nordland R@1.
+- **Seasons verified visually: `ref/` = summer (database), `query/` = winter (queries).**
+- `scripts/check_nordland.py` on the converted copy: 30,352/30,352 images present, all open, all 640×360.
+- Data location: `data/nordland/` (gitignored) or `VPR_DATA_ROOT`. Teammates use the shared zip.
+
+### 7. Midterm evaluation split: `nordland_dev1` (item B; Person 4 please confirm in the PR)
+- Official queries 1500–1775 (**276 winter queries**) vs reference frames 14,999–17,751
+  (**2,753 summer references**), stride 1. Built with
+  `prepare_nordland.py --name nordland_dev1 --query-start 1500 --num-queries 276`.
+- Keeps the official protocol unchanged inside the segment: ±1 frame tolerance, 3 correct refs per query.
+- Sized from SIFT timing on real Nordland images (laptop CPU, single process, 640×360):
+  SIFT extraction 51 ms/image (~570 keypoints); kNN + ratio 0.75 + F-RANSAC **7.2 ms per pair**.
+  dev1 = 276 × 2,753 pairs ≈ **1.5 h** exhaustive. The full protocol would be ≈ 153 h, so it's infeasible.
+- No overlap with `nordland_smoke`, so use smoke for debugging and tuning and dev1 for reported numbers.
+- Limitation for the report: one contiguous stretch of the route (10% of queries) and a smaller database
+  than the full protocol, so absolute recalls aren't comparable to published Nordland numbers.
+  SALAD (cheap) can also be run on `nordland_full` for that comparison.
+- Early observation (10 queries × 40 refs; 10 correct, 390 wrong pairs): median RANSAC inliers
+  30 for correct vs 10 for wrong pairs. SIFT does separate them across seasons, but not by much.
+
 ## Open (needs a decision, owner in brackets)
 
 | # | Question | Owner | Notes |
 |---|---|---|---|
-| A | Verify seasons: is `ref/` summer and `query/` winter? | Person 1 | Look at a few images once downloaded; update `meta.json` text in `nordland.py`. |
-| B | Development split(s) for the midterm numbers | Person 1 + 4 | Full protocol is 2,760 × 27,592. Exhaustive SIFT on that is ~76M RANSAC calls, infeasible. Options: contiguous route segment at stride 1 (keeps ±1 tolerance), or larger segment at stride 10. Time SIFT on the smoke split first, then size the dev split. |
-| C | Dataset location on each machine | everyone | Default `data/nordland/` (gitignored), override with `VPR_DATA_ROOT`. Must contain `ref/` and `query/`. |
-| D | Compute for SALAD | team | Dev laptop is CPU-only. Is there a CUDA GPU, Colab, or a CSL machine? SALAD on the full 30k images on CPU is likely hours. |
+| D | Compute for SALAD | team | Decided: Google Colab GPU. Person 1 shares the images on Drive. |
 | E | SIFT image size | Person 2 | `max_image_side` (null = native). Check Nordland's native resolution first. |
 | F | Final SALAD similarity/search | Person 3 | Cosine on L2-normalized descriptors (equivalent to SALAD's faiss L2). Confirm descriptors are normalized in practice. |

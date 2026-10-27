@@ -19,10 +19,23 @@ python -m pytest -q                  # should pass with no data downloaded
 
 ## Dataset
 
-We use the VPR-Bench release of Nordland (the one SALAD's official evaluation uses), from the
-VPR-Bench download: https://surfdrive.surf.nl/files/index.php/s/sbZRXzYe3l0v67W
+We evaluate with the VPR-Bench Nordland protocol (the one SALAD's official evaluation uses). The
+VPR-Bench download (surfdrive) is offline, so we take the images from the
+[VPR-datasets-downloader](https://github.com/gmberton/VPR-datasets-downloader) mirror and convert
+them (~1.5 GB, only the 30,352 images we need). Needs `rsync` (on Windows: run it inside WSL):
 
-Put it so that this layout exists (or set `VPR_DATA_ROOT` to the folder holding `ref/` and `query/`):
+```bash
+python scripts/prepare_nordland.py --name nordland_full         # downloads official ground truth
+# list of the files we need (all database frames + every 10th query frame)
+rsync -q rsync://vandaldata.polito.it/sf_xl/VPR-datasets-downloader/nordland/all_images_paths.txt .
+grep -E 'database/|@[0-9]*0@@@@@@@@\.jpg$' all_images_paths.txt > needed.txt
+rsync -rz --files-from=needed.txt rsync://vandaldata.polito.it/sf_xl/VPR-datasets-downloader/nordland/ data/nordland_mirror/
+python scripts/import_nordland_mirror.py data/nordland_mirror   # -> data/nordland/ref, data/nordland/query
+python scripts/check_nordland.py                                # verify everything is there
+```
+
+Teammates can skip this and use the shared Drive zip instead. Either way, this layout must exist
+(or set `VPR_DATA_ROOT` to the folder holding `ref/` and `query/`):
 
 ```
 data/nordland/ref/0000000.jpg ... 0027591.jpg     # 27,592 reference images

@@ -73,7 +73,8 @@ def build_split(gt_dir: Path, name: str, query_start: int = 0, num_queries: int 
 
     meta = {
         "dataset": "Nordland (VPR-Bench format, as used by SALAD eval)",
-        "seasons": {"reference": "summer (TO VERIFY visually)", "query": "winter (TO VERIFY visually)"},
+        "seasons": {"reference": "summer", "query": "winter"},  # verified visually, see docs/DECISIONS.md
+        "image_source": "gmberton/VPR-datasets-downloader mirror, converted by scripts/import_nordland_mirror.py",
         "gt_source": GT_URL.format(name="*.npy"),
         "gt_protocol": "query i <-> reference frames {10i-1, 10i, 10i+1} from official Nordland_gt.npy",
         "params": {"query_start": query_start, "num_queries": num_queries,
