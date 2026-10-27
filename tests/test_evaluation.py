@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.datasets.base import ImageRecord, VPRSplit, load_split, save_split  # noqa: E402
 from src.datasets.nordland import build_split  # noqa: E402
+from src.evaluation.compare import check_comparable  # noqa: E402
 from src.evaluation.recall import evaluate_recall  # noqa: E402
 from src.evaluation.runtime import summarize_runtime  # noqa: E402
 from src.utils.rankings import load_rankings, save_rankings  # noqa: E402
@@ -41,6 +42,17 @@ def test_recall_rejects_incomplete_or_invalid_rankings():
         evaluate_recall({"q1": _q(["a"]), "q2": _q(["b"])}, gt, [5])
     with pytest.raises(ValueError, match="not in the reference set"):
         evaluate_recall({"q1": _q(["a"]), "q2": _q(["zzz"])}, gt, [1], reference_ids={"a", "b"})
+
+
+def test_comparison_rows_must_share_split_and_query_count():
+    a = {"split": "s", "queries": 10, "machine": "m1"}
+    b = {"split": "s", "queries": 10, "machine": "m2"}
+    assert check_comparable([a]) == []
+    assert len(check_comparable([a, b])) == 1  # different machines: warning, not error
+    with pytest.raises(ValueError, match="splits"):
+        check_comparable([a, {**b, "split": "t"}])
+    with pytest.raises(ValueError, match="queries"):
+        check_comparable([a, {**b, "queries": 9}])
 
 
 def test_runtime_summary():

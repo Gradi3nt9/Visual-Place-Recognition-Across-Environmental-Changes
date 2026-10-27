@@ -1,0 +1,23 @@
+{
+  "dataset": "Nordland (VPR-Bench format, as used by SALAD eval)",
+  "seasons": {
+    "reference": "summer",
+    "query": "winter"
+  },
+  "image_source": "gmberton/VPR-datasets-downloader mirror, converted by scripts/import_nordland_mirror.py",
+  "gt_source": "https://raw.githubusercontent.com/serizba/salad/6aede13a3f6c25750bf7fde10209c06cb73060bb/datasets/Nordland/*.npy",
+  "gt_protocol": "query i <-> reference frames {10i-1, 10i, 10i+1} from official Nordland_gt.npy",
+  "params": {
+    "query_start": 1500,
+    "num_queries": 276,
+    "ref_stride": 1,
+    "ref_margin": 0
+  },
+  "counts": {
+    "references": 2753,
+    "queries": 276,
+    "queries_dropped_no_gt": 0,
+    "official_references": 27592,
+    "official_queries": 2760
+  }
+}
