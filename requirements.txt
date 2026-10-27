@@ -7,6 +7,7 @@ torchvision==0.16.0
 Pillow>=10.0
 PyYAML==6.0.1
 tqdm>=4.66
+matplotlib>=3.8  # qualitative retrieval figures (scripts/visualize_retrievals.py)
 # Needed only so torch.hub can import the official SALAD code (pinned to SALAD's environment.yml).
 pytorch-lightning==2.1.2
 pytest>=8.0
