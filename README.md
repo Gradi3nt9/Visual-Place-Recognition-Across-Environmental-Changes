@@ -34,7 +34,8 @@ python scripts/import_nordland_mirror.py data/nordland_mirror   # -> data/nordla
 python scripts/check_nordland.py                                # verify everything is there
 ```
 
-Teammates can skip this and use the shared Drive zip instead. Either way, this layout must exist
+Teammates can skip this and use the shared Drive zip instead. On Colab, open
+`notebooks/colab_setup.ipynb`. It mounts Drive, unzips the images, clones the repo and runs the checks. Either way, this layout must exist
 (or set `VPR_DATA_ROOT` to the folder holding `ref/` and `query/`):
 
 ```
