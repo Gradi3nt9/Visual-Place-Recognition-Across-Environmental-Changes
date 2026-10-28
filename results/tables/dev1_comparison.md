@@ -1,0 +1,4 @@
+| run | method | split | queries | references | R@1 | R@5 | R@10 | search_ms | total_ms | index_s | machine | git_commit | extract_ms | verify_ms | index_cached |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| nordland_dev1__random | random | nordland_dev1 | 276 | 2753 | 0.0 | 0.72 | 1.09 | 0.1 | 0.1 | 0.0 | Satyas-MacBook-Air.local (CPU) | f30c0594* |  |  |  |
+| nordland_dev1__sift_ransac | sift_ransac | nordland_dev1 | 276 | 2753 | 18.84 | 22.83 | 24.64 | 0.6 | 7178.9 | 41.6 | Satyas-MacBook-Air.local (CPU) | f30c0594 | 35.4 | 7143.0 | 0 |

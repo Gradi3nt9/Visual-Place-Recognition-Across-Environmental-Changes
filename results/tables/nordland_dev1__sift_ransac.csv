@@ -1,0 +1,2 @@
+run,method,split,queries,references,R@1,R@5,R@10,extract_ms,search_ms,verify_ms,total_ms,index_s,index_cached,machine,git_commit
+nordland_dev1__sift_ransac,sift_ransac,nordland_dev1,276,2753,18.84,22.83,24.64,35.4,0.6,7143.0,7178.9,41.6,0,Satyas-MacBook-Air.local (CPU),f30c0594
