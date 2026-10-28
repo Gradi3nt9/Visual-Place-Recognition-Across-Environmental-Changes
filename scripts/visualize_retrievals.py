@@ -64,7 +64,7 @@ def _draw_row(axes, qid, runs_payload, gt, ref_by_id, q_by_id):
         top_id, score = payload["queries"][qid]["ranked"][0]
         ok = top_id in correct_ids
         ax.imshow(mpimg.imread(ref_by_id[top_id].path))
-        ax.set_title(f"{name} top-1\n{top_id}  score {score:.1f}", fontsize=7,
+        ax.set_title(f"{name} top-1\n{top_id}  score {score:.3g}", fontsize=7,
                      color=GREEN if ok else RED)
         for s in ax.spines.values():
             s.set_edgecolor(GREEN if ok else RED)

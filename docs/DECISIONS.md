@@ -57,7 +57,8 @@ decision, so the midterm report can cite actual choices instead of the proposal'
 - `scripts/check_nordland.py` on the converted copy: 30,352/30,352 images present, all open, all 640×360.
 - Data location: `data/nordland/` (gitignored) or `VPR_DATA_ROOT`. Teammates use the shared zip.
 
-### 7. Midterm evaluation split: `nordland_dev1` (item B; Person 4 please confirm in the PR)
+### 7. Midterm evaluation split: `nordland_dev1` (item B; confirmed by Person 4, 2026-10-27)
+- Confirmed as the midterm evaluation set. All reported midterm numbers use this split.
 - Official queries 1500–1775 (**276 winter queries**) vs reference frames 14,999–17,751
   (**2,753 summer references**), stride 1. Built with
   `prepare_nordland.py --name nordland_dev1 --query-start 1500 --num-queries 276`.
