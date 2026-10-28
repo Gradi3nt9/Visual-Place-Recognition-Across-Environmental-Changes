@@ -72,10 +72,15 @@ decision, so the midterm report can cite actual choices instead of the proposal'
 - Early observation (10 queries × 40 refs; 10 correct, 390 wrong pairs): median RANSAC inliers
   30 for correct vs 10 for wrong pairs. SIFT does separate them across seasons, but not by much.
 
+### 8. SIFT image size (item E, 2026-10-27)
+- Native Nordland resolution is 640×360.
+- `max_image_side` is kept as `null` (native resolution).
+- At 640×360, SIFT extracts ~400–600 keypoints per image in ~18–20 ms, and pairwise kNN + ratio 0.75 + F-RANSAC runs at ~2.5 ms per pair on Apple Silicon CPU (~270 ms total query time on `nordland_smoke`).
+- Preserving native resolution maintains the fine local corner and edge structures essential to surviving severe seasonal changes (summer foliage to winter snow) without imposing an excessive computational penalty.
+
 ## Open (needs a decision, owner in brackets)
 
 | # | Question | Owner | Notes |
 |---|---|---|---|
 | D | Compute for SALAD | team | Decided: Google Colab GPU. Person 1 shares the images on Drive. |
-| E | SIFT image size | Person 2 | `max_image_side` (null = native). Check Nordland's native resolution first. |
 | F | Final SALAD similarity/search | Person 3 | Cosine on L2-normalized descriptors (equivalent to SALAD's faiss L2). Confirm descriptors are normalized in practice. |
