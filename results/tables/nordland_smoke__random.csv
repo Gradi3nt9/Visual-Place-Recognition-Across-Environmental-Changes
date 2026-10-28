@@ -1,0 +1,2 @@
+run,method,split,queries,references,R@1,R@5,R@10,search_ms,total_ms,index_s,machine,git_commit
+nordland_smoke__random,random,nordland_smoke,100,100,1.0,3.0,10.0,0.0,0.0,0.0,Satyas-MacBook-Air.local (CPU),30fd09f7*
