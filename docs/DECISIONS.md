@@ -57,7 +57,8 @@ decision, so the midterm report can cite actual choices instead of the proposal'
 - `scripts/check_nordland.py` on the converted copy: 30,352/30,352 images present, all open, all 640×360.
 - Data location: `data/nordland/` (gitignored) or `VPR_DATA_ROOT`. Teammates use the shared zip.
 
-### 7. Midterm evaluation split: `nordland_dev1` (item B; Person 4 please confirm in the PR)
+### 7. Midterm evaluation split: `nordland_dev1` (item B; confirmed by Person 4, 2026-10-27)
+- Confirmed as the midterm evaluation set. All reported midterm numbers use this split.
 - Official queries 1500–1775 (**276 winter queries**) vs reference frames 14,999–17,751
   (**2,753 summer references**), stride 1. Built with
   `prepare_nordland.py --name nordland_dev1 --query-start 1500 --num-queries 276`.
@@ -72,7 +73,16 @@ decision, so the midterm report can cite actual choices instead of the proposal'
 - Early observation (10 queries × 40 refs; 10 correct, 390 wrong pairs): median RANSAC inliers
   30 for correct vs 10 for wrong pairs. SIFT does separate them across seasons, but not by much.
 
-### 8. SIFT image size (item E, 2026-10-27)
+### 8. SALAD similarity/search — validated October 27, 2026 (item F)
+- Real-model runs on smoke, dev1, and full Nordland passed descriptor validation:
+  finite, 8448-dimensional, L2-normalized within absolute tolerance 1e-3.
+- Use dot-product cosine similarity, ranked highest first. For unit descriptors,
+  squared L2 distance equals `2 - 2 * cosine`, so both produce the same ordering.
+- Reference-cache reuse was verified on all 100 smoke references with unchanged recall.
+  Query features remain uncached.
+- Measurements and provenance limitations are recorded in `docs/SALAD.md`.
+
+### 9. SIFT image size — validated October 27, 2026 (item E)
 - Native Nordland resolution is 640×360.
 - `max_image_side` is kept as `null` (native resolution).
 - At 640×360, SIFT extracts ~400–600 keypoints per image in ~18–20 ms, and pairwise kNN + ratio 0.75 + F-RANSAC runs at ~2.5 ms per pair on Apple Silicon CPU (~270 ms total query time on `nordland_smoke`).
@@ -83,4 +93,4 @@ decision, so the midterm report can cite actual choices instead of the proposal'
 | # | Question | Owner | Notes |
 |---|---|---|---|
 | D | Compute for SALAD | team | Decided: Google Colab GPU. Person 1 shares the images on Drive. |
-| F | Final SALAD similarity/search | Person 3 | Cosine on L2-normalized descriptors (equivalent to SALAD's faiss L2). Confirm descriptors are normalized in practice. |
+
